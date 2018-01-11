@@ -3,7 +3,7 @@
 <head lang="en">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>流量分析</title>
+    <title>Traffic Analysis</title>
 
     <link href="../../static/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <link href="../../static/bootstrap-3.3.5/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
@@ -14,52 +14,52 @@
 </head>
 <body>
 <br>
-<br><!--时间流量图-->
+<br><!--Time flow chart-->
 <div class="container" style="height: 400px; width: 90%">
     <div id="time_flow" style="height: 400px;width: 75%;float:left;"></div>
     <div id="flow_in_out" style="height: 400px;width: 25%;float:left;"></div>
 </div>
-<br><!--协议流量图-->
+<br><!--Agreement flow chart-->
 <div class="container" style="height: 400px; width: 90%">
     <div id="proto_flow_pie" style="height: 400px;width: 25%;float:left;"></div>
     <div id="proto_flow_bar" style="height: 400px;width: 50%;float:left;"></div>
     <div id="proto_flow_count" style="height: 400px;width: 25%;float:left;"></div>
 </div>
-<br><!--流入流出ip数据包个数-->
+<br><!--The number of incoming and outgoing ip packets-->
 <div class="container" style="height: 400px; width: 90%">
     <div id="data_in_packet" style="height: 400px;width: 50%;float:left;"></div>
     <div id="data_out_packet" style="height: 400px;width: 50%;float:left;"></div>
 </div>
-<br><!--流入流出ip流量-->
+<br><!--Inbound and outbound ip traffic-->
 <div class="container" style="height: 400px; width: 90%">
     <div id="data_in_len" style="height: 400px;width: 50%;float:left;"></div>
     <div id="data_out_len" style="height: 400px;width: 50%;float:left;"></div>
 </div>
 {% autoescape false %}
-    <!-- ECharts单文件引入 -->
+    <!-- EChartsSingle file introduction -->
     <script src="../../static/echarts-2.27/build/dist/echarts.js" type="text/javascript"></script>
-    <!--时间流量曲线图-->
+    <!--Time traffic curve-->
     <script type="text/javascript">
-        // 路径配置
+        // Path configuration
         require.config({
             paths: {
                 echarts: '../../static/echarts-2.27/build/dist/'
             }
         });
 
-        // 使用
+        // use
         require(
             [
                 'echarts',
-                'echarts/chart/line' // 使用柱状图就加载bar模块，按需加载
+                'echarts/chart/line' // Use the bar chart to load the bar module，Load on demand
             ],
             function (ec) {
-                // 基于准备好的dom，初始化echarts图表
+                // Based on the prepared dom，Initialize echarts chart
                 var myChart = ec.init(document.getElementById('time_flow'));
 
                 var option = {
                     title : {
-                        text: '时间流量图',
+                        text: 'Time flow chart',
                         x:'center'
                     },
                     tooltip : {
@@ -69,15 +69,15 @@
                     xAxis : [
                         {
                             type : 'category',
-                            name : '相对时间',
+                            name : 'Relative Time',
                             boundaryGap : true,
-                            data : {{ time_flow.keys() }}
+                            data : {{ time_flow_keys }}
                         }
                     ],
                     yAxis : [
                         {
                             type : 'value',
-                            name : '数据包字节',
+                            name : 'Packet Bytes',
                             axisLabel : {
                                 formatter: '{value} byte'
                             }
@@ -85,23 +85,23 @@
                     ],
                     series : [
                         {
-                            name:'数据包字节',
+                            name:'Packet Bytes',
                             type:'line',
                             smooth:true,
                             symbol: 'none',
                             itemStyle:{
                                 normal:{
                                     label:{show:true},
-                                    color:'#6495ed', //图例颜色设置
+                                    color:'#6495ed', //Legend color set
                                     },
                                 emphasis:{label:{show:true}}
                                     },
-                            data:{{ time_flow.values() }}
+                            data:{{ time_flow_values }}
                         }
                     ]
                 };
 
-                // 为echarts对象加载数据
+                // Load data for echarts object
                 myChart.setOption(option);
             }
         );
