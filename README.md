@@ -1,5 +1,11 @@
 # Pcap-Analyzer
 
++## 更新说明
+++ 将项目从Python2.X移植到Python3.X
+++ 修复了多个Bug
++
++## 主要功能
+
 ## The main function
 + 1. Show the basic information of the packet
 + 2. Analysis of packet protocols
@@ -45,9 +51,12 @@ Python Package manager installed ：sudo apt-get install python-setuptools pytho
 
 ###2. Related third party dependent library installation：
 + sudo apt-get install tcpdump graphviz imagemagick python-gnuplot python-crypto python-pyx
-+ sudo pip install scapy
-+ sudo pip install Flask
-+ sudo pip install Flask-WTF
++ sudo pip3 install scapy-python3
++ sudo pip3 install Flask
++ sudo pip3 install Flask-WTF
++ sudo pip3 install geoip2
++ sudo pip3 install pyx
++ sudo pip3 install requests
 
 ###3. Modify the configuration file
 Note to modify config.py The directory location in the configuration file
@@ -56,7 +65,7 @@ Note to modify config.py The directory location in the configuration file
 + PDF_FOLDER = '/home/dj/Files/PDF/'   PCAP saved when saved as a PDF
 
 ###4. Server installation
-+ Gunicorn server：pip install gunicorn
++ Gunicorn server：pip3 install gunicorn
 + Nginx server：sudo apt-get install nginx
 + Nginx configuration: modify the /etc/nginx/nginx.conf file, add the following code in http {}：
 ```
