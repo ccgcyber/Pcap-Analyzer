@@ -1,10 +1,10 @@
 # Pcap-Analyzer
 
-+## 更新说明
-++ 将项目从Python2.X移植到Python3.X
-++ 修复了多个Bug
++ ## Update Description
+++ Migration of projects from Python2.X to Python3.X
+++ Fixes multiple Bug
 +
-+## 主要功能
++ ## main functions
 
 ## The main function
 + 1. Show the basic information of the packet
