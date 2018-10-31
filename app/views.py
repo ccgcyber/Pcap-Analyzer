@@ -50,13 +50,13 @@ def upload():
                 try:
                     pcap.save(os.path.join(app.config['UPLOAD_FOLDER'], PCAP_NAME))
                     PCAPS = rdpcap(os.path.join(app.config['UPLOAD_FOLDER'], PCAP_NAME))
-                    flash(u'Congratulations, upload success！')
+                    flash('Congratulations, upload success！')
                     return render_template('./upload/upload.html')
                 except Exception as e:
-                    flash(u'Upload error, error message:' + unicode(e.message))
+                    flash('Upload error, error message:' + str(e))
                     return render_template('./upload/upload.html')
             else:
-                flash(u'Upload failed, please upload the allowed packet format!')
+                flash('Upload failed, please upload the allowed packet format!')
                 return render_template('./upload/upload.html')
         else:
             return render_template('./upload/upload.html')
@@ -67,7 +67,7 @@ def upload():
 @app.route('/basedata/', methods=['POST', 'GET'])
 def basedata():
     if PCAPS == None:
-        flash(u"Please upload the packet to be analyzed first!")
+        flash("Please upload the packet to be analyzed first!")
         return redirect(url_for('upload'))
     else:
         filter = ProtoFilter()
@@ -84,7 +84,7 @@ PDF_NAME = ''
 @app.route('/datashow/', methods=['POST', 'GET'])
 def datashow():
     if PCAPS == None:
-        flash(u"Please upload the packet to be analyzed first!")
+        flash("Please upload the packet to be analyzed first!")
         return redirect(url_for('upload'))
     else:
         global PDF_NAME
@@ -99,7 +99,7 @@ def datashow():
 @app.route('/savepdf/', methods=['POST', 'GET'])
 def savepdf():
     if PCAPS == None:
-        flash(u"Please upload the packet to be analyzed first!")
+        flash("Please upload the packet to be analyzed first!")
         return redirect(url_for('upload'))
     else:
         return send_from_directory(app.config['PDF_FOLDER'], PDF_NAME, as_attachment=True)
@@ -109,7 +109,7 @@ def savepdf():
 @app.route('/protoanalyzer/', methods=['POST', 'GET'])
 def protoanalyzer():
     if PCAPS == None:
-        flash(u"Please upload the packet to be analyzed first!")
+        flash("Please upload the packet to be analyzed first!")
         return redirect(url_for('upload'))
     else:
         data_dict = common_proto_statistic(PCAPS)
@@ -135,7 +135,7 @@ def protoanalyzer():
 @app.route('/flowanalyzer/', methods=['POST', 'GET'])
 def flowanalyzer():
     if PCAPS == None:
-        flash(u"Please upload the packet to be analyzed first!")
+        flash("Please upload the packet to be analyzed first!")
         return redirect(url_for('upload'))
     else:
         time_flow_dict = time_flow(PCAPS)
@@ -156,7 +156,7 @@ def flowanalyzer():
 @app.route('/ipmap/', methods=['POST', 'GET'])
 def ipmap():
     if PCAPS == None:
-        flash(u"Please upload the packet to be analyzed first!")
+        flash("Please upload the packet to be analyzed first!")
         return redirect(url_for('upload'))
     else:
         myip = getmyip()
@@ -176,7 +176,7 @@ def ipmap():
 @app.route('/webdata/', methods=['POST', 'GET'])
 def webdata():
     if PCAPS == None:
-        flash(u"Please upload the packet to be analyzed first!")
+        flash("Please upload the packet to be analyzed first!")
         return redirect(url_for('upload'))
     else:
         dataid = request.args.get('id')
@@ -191,7 +191,7 @@ def webdata():
 @app.route('/maildata/', methods=['POST', 'GET'])
 def maildata():
     if PCAPS == None:
-        flash(u"Please upload the packet to be analyzed first!")
+        flash("Please upload the packet to be analyzed first!")
         return redirect(url_for('upload'))
     else:
         dataid = request.args.get('id')
@@ -206,7 +206,7 @@ def maildata():
 @app.route('/ftpdata/', methods=['POST', 'GET'])
 def ftpdata():
     if PCAPS == None:
-        flash(u"Please upload the packet to be analyzed first!")
+        flash("Please upload the packet to be analyzed first!")
         return redirect(url_for('upload'))
     else:
         dataid = request.args.get('id')
@@ -221,7 +221,7 @@ def ftpdata():
 @app.route('/telnetdata/', methods=['POST', 'GET'])
 def telnetdata():
     if PCAPS == None:
-        flash(u"Please upload the packet to be analyzed first!")
+        flash("Please upload the packet to be analyzed first!")
         return redirect(url_for('upload'))
     else:
         dataid = request.args.get('id')
@@ -236,7 +236,7 @@ def telnetdata():
 @app.route('/sendata/', methods=['POST', 'GET'])
 def sendata():
     if PCAPS == None:
-        flash(u"Please upload the packet to be analyzed first!")
+        flash("Please upload the packet to be analyzed first!")
         return redirect(url_for('upload'))
     else:
         dataid = request.args.get('id')
@@ -253,7 +253,7 @@ def sendata():
 @app.route('/exceptinfo/', methods=['POST', 'GET'])
 def exceptinfo():
     if PCAPS == None:
-        flash(u"Please upload the packet to be analyzed first!")
+        flash("Please upload the packet to be analyzed first!")
         return redirect(url_for('upload'))
     else:
         dataid = request.args.get('id')
@@ -263,7 +263,7 @@ def exceptinfo():
             if warning_list[int(dataid)-1]['data']:
                 return warning_list[int(dataid)-1]['data'].replace('\r\n', '<br>')
             else:
-                return u'<center><h3>No related packet details</h3></center>'
+                return '<center><h3>No related packet details</h3></center>'
         else:
             return render_template('./exceptions/exception.html', warning=warning_list)
 
@@ -272,7 +272,7 @@ def exceptinfo():
 @app.route('/webfile/', methods=['POST', 'GET'])
 def webfile():
     if PCAPS == None:
-        flash(u"Please upload the packet to be analyzed first!")
+        flash("Please upload the packet to be analyzed first!")
         return redirect(url_for('upload'))
     else:
         host_ip = get_host_ip(PCAPS)
@@ -290,7 +290,7 @@ def webfile():
 @app.route('/mailfile/', methods=['POST', 'GET'])
 def mailfile():
     if PCAPS == None:
-        flash(u"Please upload the packet to be analyzed first!")
+        flash("Please upload the packet to be analyzed first!")
         return redirect(url_for('upload'))
     else:
         host_ip = get_host_ip(PCAPS)
@@ -309,7 +309,7 @@ def mailfile():
 @app.route('/ftpfile/', methods=['POST', 'GET'])
 def ftpfile():
     if PCAPS == None:
-        flash(u"Please upload the packet to be analyzed first!")
+        flash("Please upload the packet to be analyzed first!")
         return redirect(url_for('upload'))
     else:
         host_ip = get_host_ip(PCAPS)
@@ -327,7 +327,7 @@ def ftpfile():
 @app.route('/allfile/', methods=['POST', 'GET'])
 def allfile():
     if PCAPS == None:
-        flash(u"Please upload the packet to be analyzed first!")
+        flash("Please upload the packet to be analyzed first!")
         return redirect(url_for('upload'))
     else:
         allfiles_dict = all_files(PCAPS, app.config['FILE_FOLDER'] + 'All/')
@@ -342,7 +342,7 @@ def allfile():
 #Agreement Description
 @app.route('/nettools/', methods=['POST', 'GET'])
 def nettools():
-    return u'Network tools'
+    return 'Network tools'
 
 
 
