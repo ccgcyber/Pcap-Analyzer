@@ -1,9 +1,9 @@
 #coding:UTF-8
-__author__ = 'dj'
+__author__ = 'CCG'
 
 import os
 
-#获取网卡名称
+# Get the NIC name
 def get_ifaces():
     ifaces_list = os.popen('ifconfig').read().split('\n\n')
     ifaces_list = [i for i in ifaces_list if i]
