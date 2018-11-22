@@ -1,5 +1,5 @@
 #coding:UTF-8
-__author__ = 'dj'
+__author__ = 'CCG'
 
 from data_extract import web_data, telnet_ftp_data, mail_data
 from scapy.all import *
@@ -9,7 +9,7 @@ import os
 import re
 import binascii
 
-#web文件
+# Web file
 def web_file(PCAPS, host_ip, folder):
     web_list = list()
     webdata = web_data(PCAPS, host_ip)
@@ -57,7 +57,7 @@ def web_file(PCAPS, host_ip, folder):
     return web_list
 
 
-#ftp文件
+# Ftp file
 def ftp_file(PCAPS, host_ip, folder):
     ftp_list = list()
     ftp_cmd_data = telnet_ftp_data(PCAPS, host_ip, 21)
@@ -90,7 +90,7 @@ def ftp_file(PCAPS, host_ip, folder):
                     f.write(ftp['data'])
                 count += 1
                 ftp_list.append({'ip_port':ftp['ip_port'].split(':')[0] + ':' + ftp['ip_port'].split(':')[1], 'filename':folder+file_name, 'size':'%.2f'%(os.path.getsize(folder+file_name)/1024.0)})
-        elif 'PORT' in cmd_data:  #PORT模式
+        elif 'PORT' in cmd_data:  # PORT mode
             pattern_port = re.compile(r'PORT(.*?)(RETR|STOR)(.*?)150', re.S)
             result = pattern_port.findall(cmd_data)
             for port, pattern, file in result:
@@ -109,7 +109,7 @@ def ftp_file(PCAPS, host_ip, folder):
     return ftp_list
 
 
-#mail文件
+# Mail file
 def mail_file(PCAPS, host_ip, folder):
     mail_list = list()
     maildata = mail_data(PCAPS, host_ip)
@@ -137,7 +137,7 @@ def mail_file(PCAPS, host_ip, folder):
             mail_list.append({'ip_port':filename.split('_')[0]+':'+filename.split('_')[1], 'filename':folder+filename, 'size':'%.2f'%(os.path.getsize(folder+filename)/1024.0)})
     return mail_list
 
-#所有二进制文件
+# All binary files
 def all_files(PCAPS, folder):
     file_header = dict()
     with open('./app/utils/protocol/FILES', 'r') as f:
