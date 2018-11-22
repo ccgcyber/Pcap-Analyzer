@@ -1,5 +1,5 @@
 #coding:UTF-8
-__author__ = 'dj'
+__author__ = 'CCG'
 
 from scapy.all import *
 from collections import OrderedDict
@@ -7,7 +7,7 @@ import re
 import binascii
 import base64
 
-#Web连接数据HTTP 80,8080
+# Web connection data HTTP 80,8080
 def web_data(PCAPS, host_ip):
     ip_port_id_list = list()
     id = 0
@@ -53,7 +53,7 @@ def web_data(PCAPS, host_ip):
         ip_port_data_list.append({'data_id':data_id,'ip_port':ip_port, 'data':''.join([PCAPS[i].load for i in load_list]), 'lens':'%.3f'%(sum([len(corrupt_bytes(PCAPS[i])) for i in load_list])/1024.0)})
     return ip_port_data_list
 
-#Mail连接数据POP3 110, IMAP 143,SMTP 25
+# Mail connection data POP3 110, IMAP 143,SMTP 25
 def mail_data(PCAPS, host_ip):
     ip_port_id_list = list()
     id = 0
@@ -140,7 +140,7 @@ def mail_data(PCAPS, host_ip):
     return ip_port_data_list
 
 
-#Telnet连接数据,telnet 23,FTP控制数据 ftp 21
+# Telnet connection data, telnet 23, FTP control data ftp 21
 def telnet_ftp_data(PCAPS, host_ip, tfport):
     if tfport == 21:
         proto = 'FTP'
@@ -193,8 +193,8 @@ def telnet_ftp_data(PCAPS, host_ip, tfport):
     return ip_port_data_list
 
 
-#FTP:login: tteesstt\r\x00\r\nPassword: capture\r
-#敏感数据
+# FTP:login: tteesstt\r\x00\r\nPassword: capture\r
+# Sensitive data
 def sen_data(PCAPS, host_ip):
     sendata_list = list()
     webdata = web_data(PCAPS, host_ip)
@@ -202,7 +202,7 @@ def sen_data(PCAPS, host_ip):
     telnetdata = telnet_ftp_data(PCAPS, host_ip, 23)
     ftpdata = telnet_ftp_data(PCAPS, host_ip, 21)
 
-    #Telnet协议帐号密码
+    # Telnet protocol account password
     telnet_pattern1 = re.compile(r'6c6f67696e3a.*?0d|4c6f67696e3a.*?0d') #login:
     telnet_pattern2 = re.compile(r'50617373776f72643a.*?0d|70617373776f72643a.*?0d') #Password:
     for telnet in telnetdata:
@@ -219,7 +219,7 @@ def sen_data(PCAPS, host_ip):
         if restp.strip():
             sendata_list.append({'ip_port': telnet['ip_port'], 'result': result, 'data':telnet['data']})
 
-    #FTP协议帐号密码
+    # FTP protocol account password
     ftp_patternl = re.compile(r'USER(.*?)331', re.S)
     ftp_patternp = re.compile(r'PASS(.*?)230', re.S)
     for ftp in ftpdata:
@@ -236,7 +236,7 @@ def sen_data(PCAPS, host_ip):
         if restp.strip():
             sendata_list.append({'ip_port': ftp['ip_port'], 'result': result, 'data':data})
 
-    #Mail协议帐号密码
+    # Mail protocol account password
     mail_patternu = re.compile(r'dXNlcm5hbWU6(.*?)334', re.S)
     mail_patternp = re.compile(r'UGFzc3dvcmQ6(.*?)235', re.S)
     for mail in maildata:
@@ -253,7 +253,7 @@ def sen_data(PCAPS, host_ip):
         if restp.strip():
             sendata_list.append({'ip_port': mail['ip_port'], 'result': result, 'data':data})
 
-    #HTTP协议帐号密码
+    # HTTP protocol account password
     web_patternu = re.compile(r'((txtUid|username|user|name)=(.*?))&', re.I)
     web_patternp = re.compile(r'((txtPwd|password|pwd|passwd)=(.*?))&', re.I)
     tomcat_pattern = re.compile(r'Authorization: Basic(.*)')
