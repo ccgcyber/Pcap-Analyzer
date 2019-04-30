@@ -69,15 +69,18 @@ def upload():
 #basic data
 @app.route('/basedata/', methods=['POST', 'GET'])
 def basedata():
+    global PCAPS, PD  
     if PCAPS == None:
         flash("Please upload the package to be analyzed first.!")
         return redirect(url_for('upload'))
     else:
-        filter = ProtoFilter()
-        filter_type = filter.filter_type.data
-        value = filter.value.data
+        # 将筛选的type和value通过表单获取
+        filter_type = request.form.get('filter_type', type=str, default=None)
+        value = request.form.get('value', type=str, default=None)
+        # 如果有选择，通过选择来获取值
         if value and filter_type:
             pcaps = proto_filter(filter_type, value, PCAPS, PD)
+        # 默认显示所有的协议数据
         else:
             pcaps = get_all_pcap(PCAPS, PD)
         return render_template('./dataanalyzer/basedata.html', pcaps=pcaps)
@@ -119,7 +122,8 @@ def protoanalyzer():
         pcap_len_dict = pcap_len_statistic(PCAPS)
         pcap_count_dict = most_proto_statistic(PCAPS, PD)
         http_dict = http_statistic(PCAPS)
-        http_dict = sorted(http_dict.items(), key=lambda d:d[1], reverse=False)
+        http_dict = sorted(http_dict.items(),
+                           key=lambda d: d[1], reverse=False)
         http_key_list = list()
         http_value_list = list()
         for key, value in http_dict:
@@ -147,7 +151,8 @@ def flowanalyzer():
         data_ip_dict = data_in_out_ip(PCAPS, host_ip)
         proto_flow_dict = proto_flow(PCAPS)
         most_flow_dict = most_flow_statistic(PCAPS, PD)
-        most_flow_dict = sorted(most_flow_dict.items(), key=lambda d:d[1], reverse=True)
+        most_flow_dict = sorted(most_flow_dict.items(),
+                                key=lambda d: d[1], reverse=True)
         if len(most_flow_dict) > 10:
             most_flow_dict = most_flow_dict[0:10]
         most_flow_key = list()
@@ -169,7 +174,8 @@ def ipmap():
             geo_dict = ipdata[0]
             ip_value_list = ipdata[1]
             myip_geo = get_geo(myip)
-            ip_value_list = [(list(d.keys())[0], list(d.values())[0]) for d in ip_value_list]
+            ip_value_list = [(list(d.keys())[0], list(d.values())[0])
+                             for d in ip_value_list]
             print(ip_value_list)
             print(geo_dict)
             return render_template('./dataanalyzer/ipmap.html', geo_data=geo_dict, ip_value=ip_value_list, mygeo=myip_geo)
@@ -212,8 +218,10 @@ def maildata():
                 f.write(raw_data)
             return send_from_directory(filepath, 'raw_data.txt', as_attachment=True)
         if filename and dataid:
-            filename_ = hashlib.md5(filename.encode('UTF-8')).hexdigest() + '.' + filename.split('.')[-1]
-            attachs_dict = mailata_list[int(dataid)-1]['parse_data']['attachs_dict']
+            filename_ = hashlib.md5(
+                filename.encode('UTF-8')).hexdigest() + '.' + filename.split('.')[-1]
+            attachs_dict = mailata_list[
+                int(dataid)-1]['parse_data']['attachs_dict']
             mode = 'wb'
             encoding = None
             if isinstance(attachs_dict[filename], str):
@@ -323,7 +331,8 @@ def webfile():
             file_dict[os.path.split(web['filename'])[-1]] = web['filename']
         file = request.args.get('file')
         if file in file_dict:
-            filename = hashlib.md5(file.encode('UTF-8')).hexdigest() + '.' + file.split('.')[-1]
+            filename = hashlib.md5(file.encode(
+                'UTF-8')).hexdigest() + '.' + file.split('.')[-1]
             os.rename(filepath+file, filepath+filename)
             return send_from_directory(filepath, filename, as_attachment=True)
         else:
@@ -344,7 +353,8 @@ def mailfile():
             file_dict[os.path.split(mail['filename'])[-1]] = mail['filename']
         file = request.args.get('file')
         if file in file_dict:
-            filename = hashlib.md5(file.encode('UTF-8')).hexdigest() + '.' + file.split('.')[-1]
+            filename = hashlib.md5(file.encode(
+                'UTF-8')).hexdigest() + '.' + file.split('.')[-1]
             os.rename(filepath+file, filepath+filename)
             return send_from_directory(filepath, filename, as_attachment=True)
         else:
@@ -366,7 +376,8 @@ def ftpfile():
             file_dict[os.path.split(ftp['filename'])[-1]] = ftp['filename']
         file = request.args.get('file')
         if file in file_dict:
-            filename = hashlib.md5(file.encode('UTF-8')).hexdigest() + '.' + file.split('.')[-1]
+            filename = hashlib.md5(file.encode(
+                'UTF-8')).hexdigest() + '.' + file.split('.')[-1]
             os.rename(filepath+file, filepath+filename)
             return send_from_directory(filepath, filename, as_attachment=True)
         else:
@@ -383,7 +394,8 @@ def allfile():
         allfiles_dict = all_files(PCAPS, filepath)
         file = request.args.get('file')
         if file in allfiles_dict:
-            filename = hashlib.md5(file.encode('UTF-8')).hexdigest() + '.' + file.split('.')[-1]
+            filename = hashlib.md5(file.encode(
+                'UTF-8')).hexdigest() + '.' + file.split('.')[-1]
             os.rename(filepath+file, filepath+filename)
             return send_from_directory(filepath, filename, as_attachment=True)
         else:
